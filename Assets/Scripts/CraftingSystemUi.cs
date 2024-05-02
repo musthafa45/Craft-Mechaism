@@ -22,10 +22,19 @@ public class CraftingSystemUi : MonoBehaviour
     private void Start()
     {
         InteractionUi.Instance.OnCrafterInteractBtnPerformed += InteractionUi_Instance_OnCrafterInteractBtnPerformed;
+        RecipeSingleUi.OnAnyCraftBtnPerformed += RecipeSingleUi_OnAnyCraftBtnPerformed;
 
         recipeSingleUiTemplateUi.gameObject.SetActive(false);
 
         Hide();
+    }
+
+    private void RecipeSingleUi_OnAnyCraftBtnPerformed(object sender, EventArgs e)
+    {
+        foreach (RecipeSingleUi recipeSingleUi in FindObjectsOfType<RecipeSingleUi>())
+        {
+            recipeSingleUi.ValidateCraftButton();
+        }
     }
 
     private void InteractionUi_Instance_OnCrafterInteractBtnPerformed(object sender, EventArgs e)

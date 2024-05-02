@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine.UI;
 
 public class RecipeSingleUi : MonoBehaviour
 {
+    public static event EventHandler OnAnyCraftBtnPerformed;
+
     [SerializeField] private Image outputRecipeImage;
     [SerializeField] private TextMeshProUGUI outputRecipeNameText;
     [SerializeField] private Transform requirementItemTemplate;
@@ -24,10 +27,12 @@ public class RecipeSingleUi : MonoBehaviour
             Inventory.Instance.AddToInventory(outPutRecipeSO.OutputItemSO);
 
             ValidateCraftButton();
+
+            OnAnyCraftBtnPerformed?.Invoke(this,EventArgs.Empty);
         });
     }
 
-    private void ValidateCraftButton()
+    public void ValidateCraftButton()
     {
         craftButton.interactable = HasSufficiantItemsOnInventory(outPutRecipeSO.RequireItemSOList);
     }
@@ -89,23 +94,34 @@ public class RecipeSingleUi : MonoBehaviour
     }
     private bool HasSufficiantItemsOnInventory(RecipeSO.RecipeData[] requireItemSOList)
     {
-        List<ItemSO> inventoryItemSoList = Inventory.Instance.GetInventoryItems();
+        // Dictionary to store the count of each item in the player's inventory
+        Dictionary<ItemSO, int> inventoryCounts = new Dictionary<ItemSO, int>();
 
-        for (int i = 0; i < requireItemSOList.Length; i++)
+        // Count items in the player's inventory
+        foreach (ItemSO itemSO in Inventory.Instance.GetInventoryItems())
         {
-            for (int j = 0; j < requireItemSOList[i].ItemQuantity; j++)
+            if (inventoryCounts.ContainsKey(itemSO))
             {
-                if(inventoryItemSoList.Contains(requireItemSOList[i].RequireItemSO))
-                {
-                    inventoryItemSoList.Remove(requireItemSOList[i].RequireItemSO);
-                }
-                else
-                {
-                    return false;
-                }
+                inventoryCounts[itemSO]++;
+            }
+            else
+            {
+                inventoryCounts[itemSO] = 1;
             }
         }
 
+        // Check if the player has enough of each required item
+        foreach (RecipeSO.RecipeData recipeData in requireItemSOList)
+        {
+            if (!inventoryCounts.ContainsKey(recipeData.RequireItemSO) ||
+                inventoryCounts[recipeData.RequireItemSO] < recipeData.ItemQuantity)
+            {
+                // Player does not have enough of this item
+                return false;
+            }
+        }
+
+        // Player has enough of all required items
         return true;
     }
 }
