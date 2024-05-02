@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc7dfe8aee5f36044a2b6147eeb23cf3, type: 3}
+  m_Name: Metal
+  m_EditorClassIdentifier: 
+  ItemName: Metal
+  ItemImageSprite: {fileID: 21300000, guid: ecc09678acd70bb4891a5bb1a1827a42, type: 3}
