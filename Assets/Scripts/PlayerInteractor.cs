@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerInteractor : MonoBehaviour
 {
     public static PlayerInteractor Instance { get; private set; }
 
-    public event Action<IInteractable> OnObjectDetected;
-    public event Action<IInteractable> OnObjectMissed;
+    public event Action<IInteractable, bool> OnInteractablesChanged;
 
     [SerializeField] private float interactRadius = 5f;
 
@@ -54,10 +54,10 @@ public class PlayerInteractor : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out IInteractable interactable))
         {
-            if(!currentInteractables.Contains(interactable))
+            if (!currentInteractables.Contains(interactable))
             {
                 currentInteractables.Add(interactable);
-                OnObjectDetected(interactable);
+                OnInteractablesChanged?.Invoke(currentInteractables.Last(), true);
                 interactable.SetActiveSelectedVisual(true);
             }
         }
@@ -70,7 +70,10 @@ public class PlayerInteractor : MonoBehaviour
             interactable.SetActiveSelectedVisual(false);
             currentInteractables.Remove(interactable);
 
-            OnObjectMissed(null);
+            if (currentInteractables.Count == 0)
+                OnInteractablesChanged?.Invoke(null, false);
+            else
+                OnInteractablesChanged?.Invoke(currentInteractables.Last(), true);
         }
     }
 
