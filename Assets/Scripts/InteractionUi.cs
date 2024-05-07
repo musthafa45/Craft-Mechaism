@@ -9,22 +9,20 @@ public class InteractionUi : MonoBehaviour
     public event EventHandler OnPickUpBtnPerformed;
     public event EventHandler OnCrafterInteractBtnPerformed;
 
-    [SerializeField] private Button pickUpButton,interactButton;
+    [SerializeField] private Button pickUpButton, interactButton;
 
     private void Awake()
     {
         Instance = this;
 
-        pickUpButton.onClick.AddListener(() =>
-        {
-            if(HasItemToPickInScene())
-                 OnPickUpBtnPerformed?.Invoke(this, EventArgs.Empty);
+        pickUpButton.onClick.AddListener(() => {
+            if (HasItemToPickInScene())
+                OnPickUpBtnPerformed?.Invoke(this, EventArgs.Empty);
             else
                 SetActiveInteractButton(false);
         });
 
-        interactButton.onClick.AddListener(() =>
-        {
+        interactButton.onClick.AddListener(() => {
             OnCrafterInteractBtnPerformed?.Invoke(this, EventArgs.Empty);
 
             SetActiveInteractButton(false);
@@ -60,26 +58,30 @@ public class InteractionUi : MonoBehaviour
 
     private void Start()
     {
-        PlayerInteractor.Instance.OnObjectDetected += PlayerInteractor_Instance_OnObjectDetected;
-        PlayerInteractor.Instance.OnObjectMissed += PlayerInteractor_Instance_OnObjectMissed;
+        PlayerInteractor.Instance.OnInteractablesChanged += HandleInteractionUiStatus;
     }
 
 
-    private void PlayerInteractor_Instance_OnObjectDetected(IInteractable interactable)
+    private void HandleInteractionUiStatus(IInteractable interactable, bool status)
     {
-        switch(interactable)
+        switch (interactable)
         {
             case CraftingSystem:
-                SetActiveInteractButton(true);
+                SetActiveInteractButton(status);
+                SetActivePickUpButton(!status);
                 break;
             case Item:
-                SetActivePickUpButton(true);
+                SetActiveInteractButton(!status);
+                SetActivePickUpButton(status);
+                break;
+            default:
+                DisableAllInteractionUi(interactable);
                 break;
         }
-      
+
     }
 
-    private void PlayerInteractor_Instance_OnObjectMissed(IInteractable interactable)
+    private void DisableAllInteractionUi(IInteractable interactable)
     {
         SetActiveInteractButton(false);
         SetActivePickUpButton(false);
