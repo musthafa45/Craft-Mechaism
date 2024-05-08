@@ -21,6 +21,7 @@ public class PlayerInteractor : MonoBehaviour
     private void Start()
     {
         currentInteractables = new List<IInteractable>();
+
         CreateOverLapCollider();
 
         InteractionUi.Instance.OnPickUpBtnPerformed += InteractionUi_Instance_OnPickUpBtnPerformed;
@@ -28,9 +29,33 @@ public class PlayerInteractor : MonoBehaviour
 
     private void InteractionUi_Instance_OnPickUpBtnPerformed(object sender, EventArgs e)
     {
-        currentInteractables[0].Interact();
-        currentInteractables.RemoveAt(0);
+        IInteractable closestCollectable = GetClosestInteractable();
+        closestCollectable.Interact();
+        currentInteractables.Remove(closestCollectable);
         HandleInteractableChanges();
+    }
+
+    private IInteractable GetClosestInteractable()
+    {
+        IInteractable closestCollectable = null;
+
+        foreach (var collectables in currentInteractables)
+        {
+            if (closestCollectable == null)
+            {
+                closestCollectable = collectables;
+            }
+            else
+            {
+                if (Vector3.Distance(transform.position, collectables.GetPosition())
+                    < Vector3.Distance(transform.position, closestCollectable.GetPosition()))
+                {
+                    closestCollectable = collectables;
+                }
+            }
+        }
+
+        return closestCollectable;
     }
 
     private void CreateOverLapCollider()
@@ -78,6 +103,8 @@ public class PlayerInteractor : MonoBehaviour
 
     private void HandleInteractableChanges()
     {
+
+
         if (currentInteractables.Count == 0)
             OnInteractablesChanged?.Invoke(null, false);
         else

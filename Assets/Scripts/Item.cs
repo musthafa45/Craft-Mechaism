@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Item : MonoBehaviour,IInteractable
+public class Item : MonoBehaviour, IInteractable
 {
     [SerializeField] private ItemSO itemSO;
     [SerializeField] private Outline outline;
@@ -14,12 +14,12 @@ public class Item : MonoBehaviour,IInteractable
     public void SetActiveSelectedVisual(bool active)
     {
         //Debug.Log(active ? $"{itemSO.ItemName} Is Selected" : "Is Not Selected");
-       SetActiveOutLine(active);
+        SetActiveOutLine(active);
     }
 
     private void SetActiveOutLine(bool active)
     {
-        outline.enabled  = active;
+        outline.enabled = active;
     }
 
     public void Interact()
@@ -29,5 +29,10 @@ public class Item : MonoBehaviour,IInteractable
         {
             Destroy(gameObject);
         }
+    }
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
     }
 }

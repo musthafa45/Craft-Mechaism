@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CraftingSystem : MonoBehaviour, IInteractable
+public class CraftBench : MonoBehaviour, IInteractable
 {
     [SerializeField] private Outline outline;
 
@@ -20,5 +20,10 @@ public class CraftingSystem : MonoBehaviour, IInteractable
     private void SetActiveOutLine(bool active)
     {
         outline.enabled = active;
+    }
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
     }
 }

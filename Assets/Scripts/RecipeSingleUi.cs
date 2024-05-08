@@ -20,15 +20,16 @@ public class RecipeSingleUi : MonoBehaviour
     {
         requirementItemTemplate.gameObject.SetActive(false);
 
-        craftButton.onClick.AddListener(() =>
-        {
+        craftButton.onClick.AddListener(() => {
             Inventory.Instance.RemoveListOfItemFromInventory(GetListItemSOFromRecipeDatas(outPutRecipeSO.RequireItemSOList));
+
+            var go = Instantiate(Resources.Load<GameObject>("Prefabs/Hammer"), GameObject.Find("Crafting Table").transform);
 
             Inventory.Instance.AddToInventory(outPutRecipeSO.OutputItemSO);
 
             ValidateCraftButton();
 
-            OnAnyCraftBtnPerformed?.Invoke(this,EventArgs.Empty);
+            OnAnyCraftBtnPerformed?.Invoke(this, EventArgs.Empty);
         });
     }
 
@@ -68,7 +69,7 @@ public class RecipeSingleUi : MonoBehaviour
         SpawnRequirmentsTemplates();
 
         ValidateCraftButton();
-        
+
     }
 
 
@@ -86,7 +87,7 @@ public class RecipeSingleUi : MonoBehaviour
     {
         for (int i = 0; i < outPutRecipeSO.RequireItemSOList.Length; i++)
         {
-            Transform reqTemplate = Instantiate(requirementItemTemplate,requirementsContainer);
+            Transform reqTemplate = Instantiate(requirementItemTemplate, requirementsContainer);
             reqTemplate.GetComponent<Image>().sprite = outPutRecipeSO.RequireItemSOList[i].RequireItemSO.ItemImageSprite;
             reqTemplate.GetComponentInChildren<TextMeshProUGUI>().text = outPutRecipeSO.RequireItemSOList[i].ItemQuantity.ToString();
             reqTemplate.gameObject.SetActive(true);

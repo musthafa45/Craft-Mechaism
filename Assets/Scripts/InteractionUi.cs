@@ -66,7 +66,7 @@ public class InteractionUi : MonoBehaviour
     {
         switch (interactable)
         {
-            case CraftingSystem:
+            case CraftBench:
                 SetActiveInteractButton(status);
                 SetActivePickUpButton(!status);
                 break;
