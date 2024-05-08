@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class CraftingSystemUi : MonoBehaviour
 {
+    public static CraftingSystemUi Instance { get; private set; }
+
+    public event EventHandler OnCraftUiClosed;
+
     [SerializeField] private List<RecipeSO> recipieSOList;
     [SerializeField] private Transform baseUiTransform;
     [SerializeField] private Transform containerOfRecipies;
@@ -13,8 +17,12 @@ public class CraftingSystemUi : MonoBehaviour
 
     private void Awake()
     {
-        closeCraftingUiButton.onClick.AddListener(() => {
+        Instance = this;
+        closeCraftingUiButton.onClick.AddListener(() =>
+        {
             Hide();
+
+            OnCraftUiClosed?.Invoke(this, EventArgs.Empty);
         });
     }
     private void Start()
