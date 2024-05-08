@@ -18,6 +18,9 @@ namespace StarterAssets
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
 
+        [Tooltip("Move Decision")]
+        public bool CanMove = true;
+
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
 
@@ -150,6 +153,19 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            InteractionUi.Instance.OnCrafterInteractBtnPerformed += InteractionUi_Instance_OnCrafterInteractBtnPerformed;
+            CraftingSystemUi.Instance.OnCraftUiClosed += CraftSystemUi_Instance_OnCraftUiClosed;
+        }
+
+        private void CraftSystemUi_Instance_OnCraftUiClosed(object sender, System.EventArgs e)
+        {
+            CanMove = true;
+        }
+
+        private void InteractionUi_Instance_OnCrafterInteractBtnPerformed(object sender, System.EventArgs e)
+        {
+            CanMove = false;
         }
 
         private void Update()
@@ -213,6 +229,8 @@ namespace StarterAssets
 
         private void Move()
         {
+            if (!CanMove) return;
+
             // set target speed based on move speed, sprint speed and if sprint is pressed
             float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
@@ -300,7 +318,7 @@ namespace StarterAssets
                 }
 
                 // Jump
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+                if (_input.jump && _jumpTimeoutDelta <= 0.0f && CanMove)
                 {
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
