@@ -30,6 +30,7 @@ public class PlayerInteractor : MonoBehaviour
     {
         currentInteractables[0].Interact();
         currentInteractables.RemoveAt(0);
+        HandleInteractableChanges();
     }
 
     private void CreateOverLapCollider()
@@ -57,8 +58,9 @@ public class PlayerInteractor : MonoBehaviour
             if (!currentInteractables.Contains(interactable))
             {
                 currentInteractables.Add(interactable);
-                OnInteractablesChanged?.Invoke(currentInteractables.Last(), true);
                 interactable.SetActiveSelectedVisual(true);
+
+                HandleInteractableChanges();
             }
         }
     }
@@ -70,11 +72,17 @@ public class PlayerInteractor : MonoBehaviour
             interactable.SetActiveSelectedVisual(false);
             currentInteractables.Remove(interactable);
 
-            if (currentInteractables.Count == 0)
-                OnInteractablesChanged?.Invoke(null, false);
-            else
-                OnInteractablesChanged?.Invoke(currentInteractables.Last(), true);
+            HandleInteractableChanges();
         }
+    }
+
+    private void HandleInteractableChanges()
+    {
+        if (currentInteractables.Count == 0)
+            OnInteractablesChanged?.Invoke(null, false);
+        else
+            OnInteractablesChanged?.Invoke(currentInteractables.Last(), true);
+
     }
 
     private void OnDrawGizmos()
