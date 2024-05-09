@@ -20,15 +20,17 @@ public class CraftingSystemUi : MonoBehaviour
         Instance = this;
         closeCraftingUiButton.onClick.AddListener(() =>
         {
-            Hide();
-
-            OnCraftUiClosed?.Invoke(this, EventArgs.Empty);
+            Hide(); 
         });
     }
     private void Start()
     {
-        InteractionUi.Instance.OnCrafterInteractBtnPerformed += InteractionUi_Instance_OnCrafterInteractBtnPerformed;
+        InteractionUi.Instance.OnGenericInteractBtnPerformed += InteractionUi_Instance_OnCrafterInteractBtnPerformed;
         RecipeSingleUi.OnAnyCraftBtnPerformed += RecipeSingleUi_OnAnyCraftBtnPerformed;
+        
+        RecipeSingleUi.OnAnyCraftItemSpawned += (sender,e) => {
+            Hide();
+        };
 
         recipeSingleUiTemplateUi.gameObject.SetActive(false);
 
@@ -89,5 +91,7 @@ public class CraftingSystemUi : MonoBehaviour
     private void Hide()
     {
         baseUiTransform.gameObject.SetActive(false);
+
+        OnCraftUiClosed?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -24,12 +24,13 @@ public class PlayerInteractor : MonoBehaviour
 
         CreateOverLapCollider();
 
-        InteractionUi.Instance.OnPickUpBtnPerformed += InteractionUi_Instance_OnPickUpBtnPerformed;
+        InteractionUi.Instance.OnGenericPickUpBtnPerformed += InteractionUi_Instance_OnPickUpBtnPerformed;
     }
 
     private void InteractionUi_Instance_OnPickUpBtnPerformed(object sender, EventArgs e)
     {
-        IInteractable closestCollectable = GetClosestInteractable();
+        Item filterInteractable = new();
+        IInteractable closestCollectable = GetClosestInteractable(filterInteractable.GetType());
         closestCollectable.Interact();
         currentInteractables.Remove(closestCollectable);
         HandleInteractableChanges();
@@ -57,6 +58,25 @@ public class PlayerInteractor : MonoBehaviour
 
         return closestCollectable;
     }
+
+    private IInteractable GetClosestInteractable(Type filterType)
+    {
+        IInteractable closestCollectable = null;
+
+        foreach (var collectable in currentInteractables)
+        {
+            if (filterType.IsAssignableFrom(collectable.GetType()))
+            {
+                if (closestCollectable == null || Vector3.Distance(transform.position, collectable.GetPosition()) < Vector3.Distance(transform.position, closestCollectable.GetPosition()))
+                {
+                    closestCollectable = collectable;
+                }
+            }
+        }
+
+        return closestCollectable;
+    }
+
 
     private void CreateOverLapCollider()
     {

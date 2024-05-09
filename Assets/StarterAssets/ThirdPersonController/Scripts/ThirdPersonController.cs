@@ -154,7 +154,7 @@ namespace StarterAssets
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
 
-            InteractionUi.Instance.OnCrafterInteractBtnPerformed += InteractionUi_Instance_OnCrafterInteractBtnPerformed;
+            InteractionUi.Instance.OnGenericInteractBtnPerformed += InteractionUi_Instance_OnCrafterInteractBtnPerformed;
             CraftingSystemUi.Instance.OnCraftUiClosed += CraftSystemUi_Instance_OnCraftUiClosed;
         }
 

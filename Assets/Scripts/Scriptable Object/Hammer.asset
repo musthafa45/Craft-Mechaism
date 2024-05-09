@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemName: Hammer
   ItemImageSprite: {fileID: 21300000, guid: cd4ff3e230d452b4c868a19033a6cb41, type: 3}
+  ItemPrefab: {fileID: 5732919361284887351, guid: 25b73d596f743cb4a9322f5696af7ffd, type: 3}

@@ -6,8 +6,8 @@ public class InteractionUi : MonoBehaviour
 {
     public static InteractionUi Instance { get; private set; }
 
-    public event EventHandler OnPickUpBtnPerformed;
-    public event EventHandler OnCrafterInteractBtnPerformed;
+    public event EventHandler OnGenericPickUpBtnPerformed;
+    public event EventHandler OnGenericInteractBtnPerformed;
 
     [SerializeField] private Button pickUpButton, interactButton;
 
@@ -17,13 +17,13 @@ public class InteractionUi : MonoBehaviour
 
         pickUpButton.onClick.AddListener(() => {
             if (HasItemToPickInScene())
-                OnPickUpBtnPerformed?.Invoke(this, EventArgs.Empty);
-            else
-                SetActiveInteractButton(false);
+                OnGenericPickUpBtnPerformed?.Invoke(this, EventArgs.Empty);
+            //else
+            //    SetActiveInteractButton(false);
         });
 
         interactButton.onClick.AddListener(() => {
-            OnCrafterInteractBtnPerformed?.Invoke(this, EventArgs.Empty);
+            OnGenericInteractBtnPerformed?.Invoke(this, EventArgs.Empty);
 
             SetActiveInteractButton(false);
         });
@@ -68,10 +68,10 @@ public class InteractionUi : MonoBehaviour
         {
             case CraftBench:
                 SetActiveInteractButton(status);
-                SetActivePickUpButton(!status);
+                //SetActivePickUpButton(!status);
                 break;
             case Item:
-                SetActiveInteractButton(!status);
+                //SetActiveInteractButton(!status);
                 SetActivePickUpButton(status);
                 break;
             default:

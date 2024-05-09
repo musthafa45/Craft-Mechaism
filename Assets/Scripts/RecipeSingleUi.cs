@@ -8,6 +8,9 @@ public class RecipeSingleUi : MonoBehaviour
 {
     public static event EventHandler OnAnyCraftBtnPerformed;
 
+    public static event EventHandler<CraftItemSpawnedArgs> OnAnyCraftItemSpawned;
+    public class CraftItemSpawnedArgs : EventArgs { public ItemSO toSpawnItemSO; }
+
     [SerializeField] private Image outputRecipeImage;
     [SerializeField] private TextMeshProUGUI outputRecipeNameText;
     [SerializeField] private Transform requirementItemTemplate;
@@ -21,15 +24,19 @@ public class RecipeSingleUi : MonoBehaviour
         requirementItemTemplate.gameObject.SetActive(false);
 
         craftButton.onClick.AddListener(() => {
+
             Inventory.Instance.RemoveListOfItemFromInventory(GetListItemSOFromRecipeDatas(outPutRecipeSO.RequireItemSOList));
-
-            var go = Instantiate(Resources.Load<GameObject>("Prefabs/Hammer"), GameObject.Find("Crafting Table").transform);
-
-            Inventory.Instance.AddToInventory(outPutRecipeSO.OutputItemSO);
 
             ValidateCraftButton();
 
             OnAnyCraftBtnPerformed?.Invoke(this, EventArgs.Empty);
+
+            OnAnyCraftItemSpawned?.Invoke(this, new CraftItemSpawnedArgs
+            {
+                toSpawnItemSO = outPutRecipeSO.OutputItemSO
+            });
+
+            //Inventory.Instance.AddToInventory(outPutRecipeSO.OutputItemSO); // Instant Add Disabled.
         });
     }
 
