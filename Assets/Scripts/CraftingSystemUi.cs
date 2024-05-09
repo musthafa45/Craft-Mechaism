@@ -15,11 +15,9 @@ public class CraftingSystemUi : MonoBehaviour
     [SerializeField] private Transform recipeSingleUiTemplateUi;
     [SerializeField] private Button closeCraftingUiButton;
 
-
     private void Awake()
     {
         Instance = this;
-
         closeCraftingUiButton.onClick.AddListener(() =>
         {
             Hide();
@@ -69,7 +67,7 @@ public class CraftingSystemUi : MonoBehaviour
             recipeSingleUi.gameObject.SetActive(true);
             recipeSingleUi.SetRecipeSo(recipieSOList[i]);
         }
-      
+
     }
 
     private void CleanUpCraftableList()
@@ -85,7 +83,7 @@ public class CraftingSystemUi : MonoBehaviour
 
     private void Show()
     {
-       baseUiTransform.gameObject.SetActive(true);
+        baseUiTransform.gameObject.SetActive(true);
     }
 
     private void Hide()
